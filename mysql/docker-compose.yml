@@ -1,0 +1,16 @@
+version: '3.1'
+services:
+  database:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=root
+      - MYSQL_DATABASE=dm124_db
+    container_name: mysql_database_api
+    ports:
+      - 3306:3306
+    volumes:
+      - "./database:/var/lib/mysql"
+    restart: on-failure
+volumes:
+  database:
