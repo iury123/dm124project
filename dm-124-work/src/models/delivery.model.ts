@@ -45,7 +45,7 @@ export class Delivery extends Entity {
   deliveryDatetime: string;
 
   @property({
-    type: 'number',
+    type: 'boolean',
     required: true,
     precision: 3,
     scale: 0,
@@ -54,7 +54,7 @@ export class Delivery extends Entity {
       dataPrecision: 3, dataScale: 0, nullable: 'N'
     },
   })
-  isBuyer: number;
+  isBuyer: boolean;
 
   @property({
     type: 'string',

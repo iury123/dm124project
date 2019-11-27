@@ -101,7 +101,10 @@ export class DeliveryController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Delivery, { partial: true }),
+          schema: getModelSchemaRef(Delivery, {
+            partial: true,
+            exclude: ['id']
+          }),
         },
       },
     })
