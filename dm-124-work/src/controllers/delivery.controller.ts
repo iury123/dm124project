@@ -13,7 +13,6 @@ import {
   getModelSchemaRef,
   getWhereSchemaFor,
   patch,
-  put,
   del,
   requestBody,
 } from '@loopback/rest';
@@ -50,20 +49,6 @@ export class DeliveryController {
     return this.deliveryRepository.create(delivery);
   }
 
-  @get('/deliveries/count', {
-    responses: {
-      '200': {
-        description: 'Delivery model count',
-        content: { 'application/json': { schema: CountSchema } },
-      },
-    },
-  })
-  async count(
-    @param.query.object('where', getWhereSchemaFor(Delivery)) where?: Where<Delivery>,
-  ): Promise<Count> {
-    return this.deliveryRepository.count(where);
-  }
-
   @get('/deliveries', {
     responses: {
       '200': {
@@ -83,28 +68,6 @@ export class DeliveryController {
     @param.query.object('filter', getFilterSchemaFor(Delivery)) filter?: Filter<Delivery>,
   ): Promise<Delivery[]> {
     return this.deliveryRepository.find(filter);
-  }
-
-  @patch('/deliveries', {
-    responses: {
-      '200': {
-        description: 'Delivery PATCH success count',
-        content: { 'application/json': { schema: CountSchema } },
-      },
-    },
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Delivery, { partial: true }),
-        },
-      },
-    })
-    delivery: Delivery,
-    @param.query.object('where', getWhereSchemaFor(Delivery)) where?: Where<Delivery>,
-  ): Promise<Count> {
-    return this.deliveryRepository.updateAll(delivery, where);
   }
 
   @get('/deliveries/{id}', {
@@ -145,20 +108,6 @@ export class DeliveryController {
     delivery: Delivery,
   ): Promise<void> {
     await this.deliveryRepository.updateById(id, delivery);
-  }
-
-  @put('/deliveries/{id}', {
-    responses: {
-      '204': {
-        description: 'Delivery PUT success',
-      },
-    },
-  })
-  async replaceById(
-    @param.path.number('id') id: number,
-    @requestBody() delivery: Delivery,
-  ): Promise<void> {
-    await this.deliveryRepository.replaceById(id, delivery);
   }
 
   @del('/deliveries/{id}', {
