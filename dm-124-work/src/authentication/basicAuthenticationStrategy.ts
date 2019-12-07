@@ -33,7 +33,10 @@ export class BasicAuthenticationStrategy implements AuthenticationStrategy {
 
   extractCredentials(request: Request): Credentials {
     const auth: string = request.headers.authorization || '';
-    const base64Credentials = auth.split(' ')[1];
+    const [authType, base64Credentials] = auth.split(' ');
+    if (authType.toLowerCase() !== 'basic') {
+      throw new HttpErrors.Unauthorized('Não possui basic authorization');
+    }
     const stringCredentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
     const [username, password] = stringCredentials.split(':');
     return { username, password };

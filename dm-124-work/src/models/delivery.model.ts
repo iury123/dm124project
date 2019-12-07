@@ -42,7 +42,7 @@ export class Delivery extends Entity {
       dataLength: null, dataPrecision: null, dataScale: null, nullable: 'N'
     },
   })
-  deliveryDatetime: string;
+  deliveryDatetime: Date;
 
   @property({
     type: 'boolean',
