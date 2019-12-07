@@ -8,8 +8,12 @@ import {
   RestBindings,
   Send,
   SequenceHandler,
+  ControllerRoute,
 } from '@loopback/rest';
-import { AuthenticateFn, AuthenticationBindings, AUTHENTICATION_STRATEGY_NOT_FOUND, USER_PROFILE_NOT_FOUND } from '@loopback/authentication';
+import {
+  AuthenticateFn, AuthenticationBindings,
+  AUTHENTICATION_STRATEGY_NOT_FOUND, USER_PROFILE_NOT_FOUND
+} from '@loopback/authentication';
 
 const SequenceActions = RestBindings.SequenceActions;
 
@@ -30,8 +34,11 @@ export class MySequence implements SequenceHandler {
       const route = this.findRoute(request);
       const args = await this.parseParams(request, route);
 
-      const auth = request.headers.authorization;
-      await this.authenticateRequest(request);
+      if (route instanceof ControllerRoute && !request.originalUrl
+        .includes('explorer')) {
+        const user = await this.authenticateRequest(request);
+        console.log(JSON.stringify(user));
+      }
 
       const result = await this.invoke(route, args);
       this.send(response, result);

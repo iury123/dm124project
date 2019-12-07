@@ -1,10 +1,16 @@
-import { UserProfile } from "@loopback/security";
+import { UserProfile, securityId } from "@loopback/security";
 import { AuthenticationStrategy } from "@loopback/authentication";
-import { Request } from "@loopback/rest";
+import { Request, HttpErrors } from "@loopback/rest";
+import { v4 as uuid } from 'uuid';
 
 export interface Credentials {
   username: string;
   password: string;
+}
+
+const adminCredentials: Credentials = {
+  username: 'admin',
+  password: 'admin123'
 }
 
 export class BasicAuthenticationStrategy implements AuthenticationStrategy {
@@ -12,19 +18,24 @@ export class BasicAuthenticationStrategy implements AuthenticationStrategy {
   name: string = 'basic';
 
   async authenticate(request: Request): Promise<UserProfile | undefined> {
-    const credentials: Credentials = this.extractCredentials(request);
 
+    const credentials = this.extractCredentials(request);
 
-    return undefined;
+    if (credentials.username === adminCredentials.username &&
+      credentials.password === adminCredentials.password) {
+      return {
+        [securityId]: uuid(),
+        name: credentials.username
+      }
+    }
+    throw new HttpErrors.Unauthorized('Credenciais incorretas');
   }
 
   extractCredentials(request: Request): Credentials {
-    let creds: Credentials;
-
-    /**
-     * Code to extract the 'basic' user credentials from the Authorization header
-     */
-
-    return creds;
+    const auth: string = request.headers.authorization || '';
+    const base64Credentials = auth.split(' ')[1];
+    const stringCredentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
+    const [username, password] = stringCredentials.split(':');
+    return { username, password };
   }
 }

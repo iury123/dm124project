@@ -14,6 +14,7 @@ import {
 } from '@loopback/rest';
 import { Delivery } from '../models';
 import { DeliveryRepository } from '../repositories';
+import { authenticate } from '@loopback/authentication';
 
 export class DeliveryController {
   constructor(
@@ -21,6 +22,7 @@ export class DeliveryController {
     public deliveryRepository: DeliveryRepository,
   ) { }
 
+  @authenticate('basic')
   @post('/deliveries', {
     responses: {
       '200': {
@@ -85,6 +87,7 @@ export class DeliveryController {
     return this.deliveryRepository.findById(id, filter);
   }
 
+  @authenticate('basic')
   @patch('/deliveries/{id}', {
     responses: {
       '204': {
@@ -109,6 +112,7 @@ export class DeliveryController {
     await this.deliveryRepository.updateById(id, delivery);
   }
 
+  @authenticate('basic')
   @del('/deliveries/{id}', {
     responses: {
       '204': {

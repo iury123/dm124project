@@ -9,7 +9,11 @@ import { RestApplication } from '@loopback/rest';
 import { ServiceMixin } from '@loopback/service-proxy';
 import * as path from 'path';
 import { MySequence } from './sequence';
-import { AuthenticationComponent } from '@loopback/authentication';
+import {
+  AuthenticationComponent,
+  registerAuthenticationStrategy
+} from '@loopback/authentication';
+import { BasicAuthenticationStrategy } from './authentication/basicAuthenticationStrategy';
 
 export class Dm124WorkApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -18,6 +22,8 @@ export class Dm124WorkApplication extends BootMixin(
     super(options);
 
     this.component(AuthenticationComponent);
+
+    registerAuthenticationStrategy(this, BasicAuthenticationStrategy);
 
     // Set up the custom sequence
     this.sequence(MySequence);
